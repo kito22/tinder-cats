@@ -1,6 +1,8 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import styles from "./styles";
 import { TSwipeDirection } from "../../types";
+import DislikeIcon from "assets/svg/dislike.svg";
+import HeartIcon from "assets/svg/heart.svg";
 
 interface IOwnProps {
   onPress: (direction: TSwipeDirection) => void;
@@ -13,14 +15,14 @@ const CardActions: React.FC<IOwnProps> = ({ onPress }) => {
         style={styles.cardActionButton}
         onPress={() => onPress("left")}
       >
-        <Text>Dislike</Text>
+        <DislikeIcon />
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.cardActionButton}
         onPress={() => onPress("right")}
       >
-        <Text>Like</Text>
+        <HeartIcon />
       </TouchableOpacity>
     </View>
   );
