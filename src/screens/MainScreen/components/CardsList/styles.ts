@@ -21,10 +21,6 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     height: CARD_HEIGHT,
   },
-  nextCard: {
-    transform: [{ scale: 0.95 }],
-    opacity: 0.9,
-  },
 });
 
 export default styles;

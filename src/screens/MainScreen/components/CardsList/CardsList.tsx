@@ -5,29 +5,13 @@ import styles from "./styles";
 import { useRef, useState } from "react";
 import CardWrapper from "./components/CardWrapper/CardWrapper";
 import { ICardWrapperRef, TSwipeDirection } from "./types";
-
-const MOCK_CARDS = [
-  {
-    id: "1",
-    name: "Whiskers",
-    origin: "Egypt",
-    affection_level: 5,
-  },
-  {
-    id: "2",
-    name: "Mittens",
-    origin: "USA",
-    affection_level: 4,
-  },
-  {
-    id: "3",
-    name: "Shadow",
-    origin: "UK",
-    affection_level: 3,
-  },
-];
+import { useCats } from "./hooks/useCats";
+import { useVotes } from "./hooks/useVotes";
 
 const CardsList: React.FC = () => {
+  const { cats } = useCats();
+  const { vote } = useVotes();
+
   const cardRef = useRef<ICardWrapperRef>(null);
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -38,7 +22,10 @@ const CardsList: React.FC = () => {
 
   const handleSwipe = (direction: TSwipeDirection) => {
     if (direction === "right") {
-      // TODO: call API
+      vote({
+        image_id: cats[currentIndex].reference_image_id,
+        value: 1,
+      });
     }
 
     setCurrentIndex((prev) => prev + 1);
@@ -47,15 +34,13 @@ const CardsList: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.cardsContainer}>
-        {MOCK_CARDS[currentIndex + 1] && (
-          <View style={[styles.cardItem, styles.nextCard]}>
-            <Card item={MOCK_CARDS[currentIndex + 1]} />
-          </View>
-        )}
-
-        {MOCK_CARDS[currentIndex] && (
-          <CardWrapper ref={cardRef} onSwipe={handleSwipe}>
-            <Card item={MOCK_CARDS[currentIndex]} />
+        {cats[currentIndex] && (
+          <CardWrapper
+            key={`active-${cats[currentIndex].id}`}
+            ref={cardRef}
+            onSwipe={handleSwipe}
+          >
+            <Card item={cats[currentIndex]} />
           </CardWrapper>
         )}
       </View>

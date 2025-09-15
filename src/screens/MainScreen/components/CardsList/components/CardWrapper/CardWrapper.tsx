@@ -25,6 +25,7 @@ interface IOwnProps {
 const CardWrapper = forwardRef<ICardWrapperRef, IOwnProps>(
   ({ onSwipe, children }, ref) => {
     const translateX = useSharedValue(0);
+    const isAnimating = useSharedValue(false);
 
     const animatedStyle = useAnimatedStyle(() => ({
       transform: [
@@ -33,34 +34,54 @@ const CardWrapper = forwardRef<ICardWrapperRef, IOwnProps>(
       ],
     }));
 
+    const animateOut = (direction: TSwipeDirection) => {
+      if (isAnimating.value) {
+        return;
+      }
+
+      isAnimating.value = true;
+
+      const toValue = direction === "right" ? width : -width;
+
+      translateX.value = withSpring(
+        toValue * 1.2,
+        {
+          duration: 150,
+        },
+        () => {
+          scheduleOnRN(onSwipe, direction);
+          isAnimating.value = false;
+        }
+      );
+    };
+
     const panGesture = Gesture.Pan()
       .onUpdate((event) => {
-        translateX.value = event.translationX;
+        if (!isAnimating.value) {
+          translateX.value = event.translationX;
+        }
       })
       .onEnd(() => {
-        if (Math.abs(translateX.value) > SWIPE_THRESHOLD) {
-          const direction = translateX.value > 0 ? "right" : "left";
-          const toValue = direction === "right" ? width : -width;
-
-          translateX.value = withSpring(toValue, {}, () => {
-            scheduleOnRN(onSwipe, direction);
-            translateX.value = 0;
-          });
-
+        if (isAnimating.value) {
           return;
         }
 
-        translateX.value = withSpring(0);
+        if (Math.abs(translateX.value) > SWIPE_THRESHOLD) {
+          const direction: TSwipeDirection =
+            translateX.value > 0 ? "right" : "left";
+
+          scheduleOnRN(animateOut, direction);
+        } else {
+          translateX.value = withSpring(0);
+        }
       });
 
     useImperativeHandle(ref, () => ({
       swipe: (direction: TSwipeDirection) => {
-        const toValue = direction === "right" ? width : -width;
-
-        translateX.value = withSpring(toValue, {}, () => {
-          scheduleOnRN(onSwipe, direction);
-          translateX.value = 0;
-        });
+        scheduleOnRN(animateOut, direction);
+      },
+      resetPosition: () => {
+        translateX.value = 0;
       },
     }));
 

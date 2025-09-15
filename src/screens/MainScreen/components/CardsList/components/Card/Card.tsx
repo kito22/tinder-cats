@@ -1,13 +1,9 @@
 import { Image, Text, View } from "react-native";
 import styles from "./styles";
+import { ICatFull } from "src/types/cat";
 
 interface IOwnProps {
-  item: {
-    id: string;
-    name: string;
-    origin: string;
-    affection_level: number;
-  };
+  item: ICatFull;
 }
 
 const Card: React.FC<IOwnProps> = ({ item }) => {
@@ -16,7 +12,7 @@ const Card: React.FC<IOwnProps> = ({ item }) => {
       <Image
         style={styles.cardImage}
         source={{
-          uri: "https://cdn2.thecatapi.com/images/0XYvRd7oD.jpg",
+          uri: item.imageUrl,
         }}
       />
       <View style={styles.infoContainer}>
