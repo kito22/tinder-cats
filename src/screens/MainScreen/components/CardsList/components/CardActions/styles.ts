@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
   cardActionsContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: scaleV(58),
+    marginTop: scaleV(32),
     columnGap: scaleH(48),
   },
   cardActionButton: {
