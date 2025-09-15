@@ -8,6 +8,9 @@ export const colors = {
 
   white: "#FFFFFF",
   black: "#000000",
+
+  focusedIcon: "#EC537E",
+  unfocusedIcon: "#434141",
 };
 
 export const shadows = {
