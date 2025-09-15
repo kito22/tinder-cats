@@ -7,9 +7,11 @@ import CardWrapper from "./components/CardWrapper/CardWrapper";
 import { ICardWrapperRef, TSwipeDirection } from "./types";
 import { useCats } from "./hooks/useCats";
 import { useVotes } from "./hooks/useVotes";
+import Loading from "src/components/Loading/Loading";
+import NoMoreItems from "./components/NoMoreItems/NoMoreItems";
 
 const CardsList: React.FC = () => {
-  const { cats } = useCats();
+  const { cats, isLoading } = useCats();
   const { vote } = useVotes();
 
   const cardRef = useRef<ICardWrapperRef>(null);
@@ -30,6 +32,18 @@ const CardsList: React.FC = () => {
 
     setCurrentIndex((prev) => prev + 1);
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (!isLoading && cats.length === 0) {
+    return <NoMoreItems message="No cats available right now." />;
+  }
+
+  if (currentIndex >= cats.length) {
+    return <NoMoreItems onRestart={() => setCurrentIndex(0)} />;
+  }
 
   return (
     <View style={styles.container}>
