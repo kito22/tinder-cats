@@ -1,8 +1,9 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import styles from "./styles";
+import { TSwipeDirection } from "../../types";
 
 interface IOwnProps {
-  onPress: (direction: "left" | "right") => void;
+  onPress: (direction: TSwipeDirection) => void;
 }
 
 const CardActions: React.FC<IOwnProps> = ({ onPress }) => {

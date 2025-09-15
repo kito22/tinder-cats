@@ -1,23 +1,10 @@
-import { Dimensions, View } from "react-native";
+import { View } from "react-native";
 import Card from "./components/Card/Card";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-} from "react-native-reanimated";
-import {
-  Gesture,
-  GestureDetector,
-  GestureHandlerRootView,
-} from "react-native-gesture-handler";
 import CardActions from "./components/CardActions/CardActions";
 import styles from "./styles";
-import { useState } from "react";
-import { scheduleOnRN } from "react-native-worklets";
-
-const { width } = Dimensions.get("window");
-
-const SWIPE_THRESHOLD = width * 0.35;
+import { useRef, useState } from "react";
+import CardWrapper from "./components/CardWrapper/CardWrapper";
+import { ICardWrapperRef, TSwipeDirection } from "./types";
 
 const MOCK_CARDS = [
   {
@@ -41,47 +28,21 @@ const MOCK_CARDS = [
 ];
 
 const CardsList: React.FC = () => {
+  const cardRef = useRef<ICardWrapperRef>(null);
+
   const [currentIndex, setCurrentIndex] = useState(0);
-  const translateX = useSharedValue(0);
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: translateX.value },
-      { rotateZ: `${(translateX.value / width) * 10}deg` },
-    ],
-  }));
+  const handleCardAction = (direction: TSwipeDirection) => {
+    cardRef.current?.swipe(direction);
+  };
 
-  const handleNextCard = () => {
+  const handleSwipe = (direction: TSwipeDirection) => {
+    if (direction === "right") {
+      // TODO: call API
+    }
+
     setCurrentIndex((prev) => prev + 1);
   };
-
-  const handleCardAction = (direction: "left" | "right") => {
-    const toValue = direction === "right" ? width : -width;
-
-    translateX.value = withSpring(toValue, {}, () => {
-      if (direction === "right") {
-        // TODO: call api
-      }
-
-      scheduleOnRN(handleNextCard);
-      translateX.value = 0;
-    });
-  };
-
-  const panGesture = Gesture.Pan()
-    .onUpdate((event) => {
-      translateX.value = event.translationX;
-    })
-    .onEnd(() => {
-      if (Math.abs(translateX.value) > SWIPE_THRESHOLD) {
-        const direction = translateX.value > 0 ? "right" : "left";
-        scheduleOnRN(handleCardAction, direction);
-
-        return;
-      }
-
-      translateX.value = withSpring(0);
-    });
 
   return (
     <View style={styles.container}>
@@ -93,15 +54,9 @@ const CardsList: React.FC = () => {
         )}
 
         {MOCK_CARDS[currentIndex] && (
-          <>
-            <GestureHandlerRootView style={[styles.cardItem]}>
-              <GestureDetector gesture={panGesture}>
-                <Animated.View style={[animatedStyle]}>
-                  <Card item={MOCK_CARDS[currentIndex]} />
-                </Animated.View>
-              </GestureDetector>
-            </GestureHandlerRootView>
-          </>
+          <CardWrapper ref={cardRef} onSwipe={handleSwipe}>
+            <Card item={MOCK_CARDS[currentIndex]} />
+          </CardWrapper>
         )}
       </View>
       <CardActions onPress={handleCardAction} />
