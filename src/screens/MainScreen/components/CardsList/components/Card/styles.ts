@@ -1,16 +1,12 @@
 import { StyleSheet } from "react-native";
 import { colors, shadows } from "src/theme/theme";
 import { scaleH, scaleV } from "src/utils/units";
+import { CARD_HEIGHT } from "./components/consts";
 
 const styles = StyleSheet.create({
-  cardContainer: {
-    flex: 1,
-    flexDirection: "column",
-    alignItems: "center",
-  },
   cardContent: {
     flexDirection: "row",
-    height: scaleV(446),
+    height: CARD_HEIGHT,
     width: "100%",
     borderRadius: scaleV(16),
     ...shadows.primary,

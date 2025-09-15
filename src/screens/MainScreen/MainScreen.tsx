@@ -1,14 +1,14 @@
 import { View } from "react-native";
 import styles from "./styles";
 import ViewModeSelector from "./components/ViewModeSelector/ViewModeSelector";
-import Card from "./components/Card/Card";
+import CardsList from "./components/CardsList/CardsList";
 
-const MainScreen = () => {
+const MainScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <ViewModeSelector />
 
-      <Card />
+      <CardsList />
     </View>
   );
 };
