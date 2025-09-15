@@ -9,6 +9,7 @@ import { useCats } from "./hooks/useCats";
 import { useVotes } from "./hooks/useVotes";
 import Loading from "src/components/Loading/Loading";
 import NoMoreItems from "./components/NoMoreItems/NoMoreItems";
+import { isLikeAction } from "./utils";
 
 const CardsList: React.FC = () => {
   const { cats, isLoading } = useCats();
@@ -23,7 +24,7 @@ const CardsList: React.FC = () => {
   };
 
   const handleSwipe = (direction: TSwipeDirection) => {
-    if (direction === "right") {
+    if (isLikeAction(direction)) {
       vote({
         image_id: cats[currentIndex].reference_image_id,
         value: 1,
