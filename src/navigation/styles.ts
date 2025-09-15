@@ -14,7 +14,9 @@ const styles = StyleSheet.create({
     width: scaleH(156),
     borderRadius: scaleV(30),
     height: scaleV(60),
+    bottom: scaleV(4),
     marginLeft: (SCREEN_WIDTH - BAR_WIDTH) / 2,
+    borderWidth: 1,
     ...shadows.primary,
   },
 });

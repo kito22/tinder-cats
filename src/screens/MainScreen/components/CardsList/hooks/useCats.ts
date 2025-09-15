@@ -4,7 +4,7 @@ import { fetchCatImage, fetchCats } from "src/services/catApi";
 
 export const useCats = () => {
   const [cats, setCats] = useState<ICat[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -41,12 +41,12 @@ export const useCats = () => {
       } catch (err) {
         setError("Error fetching cats");
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
     loadCats();
   }, []);
 
-  return { cats, loading, error };
+  return { cats, isLoading, error };
 };
